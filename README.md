@@ -1,6 +1,6 @@
 Keywords For Site
 
-```
+```golang
 package main
 
 import (
