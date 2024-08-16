@@ -6,23 +6,29 @@ package main
 import (
 	"context"
 	"log"
+
 	"github.com/mainanick/dataforseo"
 )
 
-client := dataforseo.NewClient(nil).WithAuthToken("username", "password")
+func main() {
+	dataforseo.DefaultBaseURL = "https://sandbox.dataforseo.com/v3/"
+	client := dataforseo.NewClient(nil).WithAuthToken("username", "password")
 
-keywords, err := client.Keyword.GoogleSiteKeywords(context.TODO(), dataforseo.SiteKeywordRequest{
-		Target:       "safaribooking.com",
+	keywords, err := client.Keyword.GoogleSiteKeywords(context.TODO(), dataforseo.SiteKeywordRequest{
+		Target:       "github.com",
 		LocationName: "United States",
-})
-if err != nil {
-    log.Fatalln("Error: ", err.Error())
+	})
+	if err != nil {
+		log.Fatalln("Error: ", err.Error())
+	}
+
+	for _, task := range keywords.Tasks {
+		log.Println("Results", len(task.Result))
+		for _, r := range task.Result {
+			log.Println("Keyword: ", r.Keyword)
+		}
+	}
+
 }
 
-log.Println("Keyword Response Returned", len(keywords.Tasks))
-for _, task := range keywords.Tasks {
-    for _, r := range task.Result {
-        log.Println("Keyword: ", r.Keyword)
-    }
-}
 ```
