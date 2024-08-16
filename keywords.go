@@ -4,27 +4,27 @@ import "context"
 
 type SiteKeywordRequest struct {
 	Target               string `json:"target"`
-	TargetType           string `json:"target_type"`
-	LocationName         string `json:"location_name"`
-	LocationCode         int64  `json:"location_code"`
-	LocationCoordinate   string `json:"location_coordinate"`
-	LanguageName         string `json:"language_name"`
-	LanguageCode         string `json:"language_code"`
-	SearchPartners       bool   `json:"search_partners"`
-	DateFrom             string `json:"date_from"`
-	DateTo               string `json:"date_to"`
-	IncludeAdultKeywords bool   `json:"include_adult_keywords"`
-	SortBy               string `json:"sort_by"`
-	Tag                  string `json:"tag"`
+	TargetType           string `json:"target_type,omitempty"`
+	LocationName         string `json:"location_name,omitempty"`
+	LocationCode         int64  `json:"location_code,omitempty"`
+	LocationCoordinate   string `json:"location_coordinate,omitempty"`
+	LanguageName         string `json:"language_name,omitempty"`
+	LanguageCode         string `json:"language_code,omitempty"`
+	SearchPartners       bool   `json:"search_partners,omitempty"`
+	DateFrom             string `json:"date_from,omitempty"`
+	DateTo               string `json:"date_to,omitempty"`
+	IncludeAdultKeywords bool   `json:"include_adult_keywords,omitempty"`
+	SortBy               string `json:"sort_by,omitempty"`
+	Tag                  string `json:"tag,omitempty"`
 }
 
-type KeywordResult struct {
+type SiteKeywordResult struct {
 	Keyword          string  `json:"keyword"`
 	LocationCode     int64   `json:"location_code"`
 	LanguageCode     string  `json:"language_code"`
 	SearchPartners   bool    `json:"search_partners"`
 	Competition      string  `json:"competition"`
-	CompetitionIndex string  `json:"competition_index"`
+	CompetitionIndex int64   `json:"competition_index"`
 	SearchVolume     int64   `json:"search_volume"`
 	LowTopOfPageBid  float64 `json:"low_top_of_page_bid"`
 	HighTopOfPageBid float64 `json:"high_top_of_page_bid"`
@@ -34,24 +34,37 @@ type KeywordResult struct {
 		Month        int   `json:"month"`
 		SearchVolume int64 `json:"search_volume"`
 	} `json:"monthly_searches"`
-	// TODO: Refactor keyword_annotations type:object desc:the annotations for the keyword
-	KeywordAnnotations string `json:"keyword_annotations"`
-	Concepts           []struct {
-		Name         string `json:"name"`
-		ConceptGroup []struct {
-			Name string `json:"name"`
-			Type string `json:"type"`
+	KeywordAnnotations struct {
+		Concepts []struct {
+			Name         string `json:"name"`
+			ConceptGroup struct {
+				Name string `json:"name"`
+				Type string `json:"type"`
+			} `json:"concept_group"`
 		} `json:"concepts"`
-	}
+	} `json:"keyword_annotations"`
 }
 type SiteKeywordResponseTasks struct {
 	*BaseReponseTaskList
-	Result []KeywordResult
+	Result []SiteKeywordResult `json:"result"`
 }
 type SiteKeywordResponse struct {
 	*BaseResponse
-	Tasks []SiteKeywordResponseTasks
+	Tasks []SiteKeywordResponseTasks `json:"tasks"`
 }
 
-func GoogleAdsSearchVolume(ctx context.Context, data SiteKeywordRequest) {
+type SiteKeywordService service
+
+func (s *SiteKeywordService) GoogleAdsSearchVolume(ctx context.Context, data SiteKeywordRequest) (*SiteKeywordResponse, error) {
+
+	req, err := s.client.NewRequest("POST", "keywords_data/google_ads/keywords_for_site/live", []interface{}{data})
+	if err != nil {
+		return nil, err
+	}
+	keywordResponse := &SiteKeywordResponse{}
+	_, err = s.client.Do(context.TODO(), req, keywordResponse)
+	if err != nil {
+		return nil, err
+	}
+	return keywordResponse, nil
 }

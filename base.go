@@ -16,7 +16,7 @@ type BaseResponse struct {
 	StatusMessage string                `json:"status_message"`
 	Time          string                `json:"time"`
 	Cost          float64               `json:"cost"`
-	TasksCount    bool                  `json:"tasks_count"`
-	TasksError    bool                  `json:"tasks_error"`
+	TasksCount    int64                 `json:"tasks_count"`
+	TasksError    int64                 `json:"tasks_error"`
 	Tasks         []BaseReponseTaskList `json:"tasks"`
 }

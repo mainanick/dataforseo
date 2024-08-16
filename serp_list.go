@@ -1,4 +1,4 @@
-package serp
+package dataforseo
 
 var (
 	IDListURL = "https://api.dataforseo.com/v3/serp/id_list"
