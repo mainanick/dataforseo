@@ -55,14 +55,13 @@ type SiteKeywordResponse struct {
 
 type SiteKeywordService service
 
-func (s *SiteKeywordService) GoogleAdsSearchVolume(ctx context.Context, data SiteKeywordRequest) (*SiteKeywordResponse, error) {
-
+func (s *SiteKeywordService) GoogleSiteKeywords(ctx context.Context, data SiteKeywordRequest) (*SiteKeywordResponse, error) {
 	req, err := s.client.NewRequest("POST", "keywords_data/google_ads/keywords_for_site/live", []interface{}{data})
 	if err != nil {
 		return nil, err
 	}
 	keywordResponse := &SiteKeywordResponse{}
-	_, err = s.client.Do(context.TODO(), req, keywordResponse)
+	_, err = s.client.Do(ctx, req, keywordResponse)
 	if err != nil {
 		return nil, err
 	}

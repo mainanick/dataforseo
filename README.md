@@ -11,9 +11,9 @@ import (
 
 client := dataforseo.NewClient(nil).WithAuthToken("username", "password")
 
-keywords, err := client.Keyword.GoogleAdsSearchVolume(context.TODO(), dataforseo.SiteKeywordRequest{
-    Target:       "github.com",
-    LocationName: "United States",
+keywords, err := client.Keyword.GoogleSiteKeywords(context.TODO(), dataforseo.SiteKeywordRequest{
+		Target:       "safaribooking.com",
+		LocationName: "United States",
 })
 if err != nil {
     log.Fatalln("Error: ", err.Error())
