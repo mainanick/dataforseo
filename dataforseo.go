@@ -30,6 +30,7 @@ type Client struct {
 	srv service
 
 	Keyword *SiteKeywordService
+	Serp    *SerpService
 }
 
 func NewClient(httpClient *http.Client) *Client {
@@ -54,6 +55,7 @@ func (c *Client) init() {
 
 	c.srv.client = c
 	c.Keyword = (*SiteKeywordService)(&c.srv)
+	c.Serp = (*SerpService)(&c.srv)
 }
 
 // WithAuthToken returns a copy of the client configured to use the provided token for the Authorization header.
