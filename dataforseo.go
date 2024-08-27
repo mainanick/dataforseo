@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"log"
 	"net/http"
@@ -14,6 +15,12 @@ import (
 var (
 	DefaultBaseURL string = "https://api.dataforseo.com/v3/"
 	UserAgent             = "github.com/mainanick/dataforseo"
+)
+
+var (
+	ErrPaymentRequired = errors.New("Payment Required")
+	ErrDataForSEO      = errors.New("DataForSEO Error")
+	ErrUnauthorized    = errors.New("Unauthorized")
 )
 
 type service struct {
@@ -141,16 +148,27 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}, opts ...Req
 	return req, nil
 }
 
-type DataForSEOError struct{}
-
-func (*DataForSEOError) Error() string {
-	return "DataForSEO Error"
+type DataForSEOError struct {
+	Msg string
+	Err error
 }
+
+func (d *DataForSEOError) Error() string {
+	return d.Error()
+}
+
 func CheckResponse(r *http.Response) error {
 	if c := r.StatusCode; 200 <= c && c <= 299 {
 		return nil
 	}
-	return &DataForSEOError{}
+	if r.StatusCode == http.StatusPaymentRequired {
+		return ErrPaymentRequired
+	}
+
+	if r.StatusCode == http.StatusUnauthorized {
+		return ErrUnauthorized
+	}
+	return ErrDataForSEO
 }
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
 	req = req.WithContext(ctx)
