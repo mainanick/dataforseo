@@ -68,7 +68,7 @@ type SiteKeywordResponse struct {
 
 type SiteKeywordService Service
 
-func (s *SiteKeywordService) GoogleSiteKeywords(ctx context.Context, data SiteKeywordRequest) (*SiteKeywordResponse, error) {
+func (s *SiteKeywordService) GoogleSiteKeywords(ctx context.Context, data *SiteKeywordRequest) (*SiteKeywordResponse, error) {
 	req, err := s.client.NewRequest("POST", "keywords_data/google_ads/keywords_for_site/live", []interface{}{data})
 	if err != nil {
 		return nil, err
@@ -81,7 +81,7 @@ func (s *SiteKeywordService) GoogleSiteKeywords(ctx context.Context, data SiteKe
 	return keywordResponse, nil
 }
 
-func (s *SiteKeywordService) KeywordsForKeywords(ctx context.Context, data KeywordForKeywordRequest) (*SiteKeywordResponse, error) {
+func (s *SiteKeywordService) KeywordsForKeywords(ctx context.Context, data *KeywordForKeywordRequest) (*SiteKeywordResponse, error) {
 	req, err := s.client.NewRequest("POST", "keywords_data/google_ads/keywords_for_keywords/live", []interface{}{data})
 	if err != nil {
 		return nil, err

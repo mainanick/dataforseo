@@ -95,7 +95,7 @@ type GoogleOrganicResponse struct {
 
 type SerpService Service
 
-func (s *SerpService) GoogleOrganicRegular(ctx context.Context, data GoogleOrganicRequest) (*GoogleOrganicResponse, error) {
+func (s *SerpService) GoogleOrganicRegular(ctx context.Context, data *GoogleOrganicRequest) (*GoogleOrganicResponse, error) {
 	req, err := s.client.NewRequest("POST", "serp/google/organic/live/regular", []interface{}{data})
 	if err != nil {
 		return nil, err
