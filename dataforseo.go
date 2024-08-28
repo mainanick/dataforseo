@@ -10,20 +10,32 @@ import (
 	"net/http"
 	"net/url"
 	"sync"
+	"time"
 )
 
 var (
 	DefaultBaseURL string = "https://api.dataforseo.com/v3/"
 	UserAgent             = "github.com/mainanick/dataforseo"
+	DefaultTimeout        = 10 * time.Second
 )
 
 var (
 	ErrPaymentRequired = errors.New("Payment Required")
 	ErrDataForSEO      = errors.New("DataForSEO Error")
 	ErrUnauthorized    = errors.New("Unauthorized")
+	ErrTimeout         = errors.New("Timeout")
 )
 
-type service struct {
+type DataForSEOError struct {
+	Msg string
+	Err error
+}
+
+func (d *DataForSEOError) Error() string {
+	return d.Error()
+}
+
+type Service struct {
 	client *Client
 }
 
@@ -34,15 +46,18 @@ type Client struct {
 	BaseURL           *url.URL
 	UserAgent         string
 
-	srv service
+	srv Service
 
-	Keyword *SiteKeywordService
-	Serp    *SerpService
+	Keyword    *SiteKeywordService
+	Serp       *SerpService
+	GoogleLabs *GoogleLabsService
 }
 
 func NewClient(httpClient *http.Client) *Client {
 	if httpClient == nil {
-		httpClient = &http.Client{}
+		httpClient = &http.Client{
+			Timeout: DefaultTimeout,
+		}
 	}
 	c := &Client{
 		client: httpClient,
@@ -53,7 +68,9 @@ func NewClient(httpClient *http.Client) *Client {
 
 func (c *Client) init() {
 	if c.client == nil {
-		c.client = &http.Client{}
+		c.client = &http.Client{
+			Timeout: DefaultTimeout,
+		}
 	}
 	if c.BaseURL == nil {
 		c.BaseURL, _ = url.Parse(DefaultBaseURL)
@@ -63,6 +80,7 @@ func (c *Client) init() {
 	c.srv.client = c
 	c.Keyword = (*SiteKeywordService)(&c.srv)
 	c.Serp = (*SerpService)(&c.srv)
+	c.GoogleLabs = (*GoogleLabsService)(&c.srv)
 }
 
 // WithAuthToken returns a copy of the client configured to use the provided token for the Authorization header.
@@ -111,7 +129,19 @@ func WithUserAgent(useragent string) RequestOption {
 	}
 }
 
-func (c *Client) NewRequest(method, urlStr string, body interface{}, opts ...RequestOption) (*http.Request, error) {
+func WithBasicAuth(username, password string) RequestOption {
+	return func(req *http.Request) {
+		req.SetBasicAuth(username, password)
+	}
+}
+
+func WithHeader(key, value string) RequestOption {
+	return func(req *http.Request) {
+		req.Header.Set(key, value)
+	}
+}
+
+func (c *Client) NewRequest(method string, urlStr string, body interface{}, opts ...RequestOption) (*http.Request, error) {
 	u, err := c.BaseURL.Parse(urlStr)
 	log.Println(u.String())
 	if err != nil {
@@ -146,15 +176,6 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}, opts ...Req
 	}
 
 	return req, nil
-}
-
-type DataForSEOError struct {
-	Msg string
-	Err error
-}
-
-func (d *DataForSEOError) Error() string {
-	return d.Error()
 }
 
 func CheckResponse(r *http.Response) error {

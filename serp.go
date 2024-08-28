@@ -11,18 +11,6 @@ type SerpListIDRequest struct {
 	IncludeMetadata bool   `json:"include_metadata"`
 }
 
-type SerpListIDTask struct {
-	ID            string            `json:"id"`
-	StatusCode    int               `json:"status_code"`
-	StatusMessage string            `json:"status_message"`
-	Time          string            `json:"time"`
-	Cost          float64           `json:"cost"`
-	ResultCount   int64             `json:"result_count"`
-	Path          []string          `json:"path"`
-	Data          SerpListIDRequest `json:"data"`
-	Result        SerpListIDRequest
-}
-
 type SerpListIDResult struct {
 	ID             string            `json:"id"`
 	URL            []string          `json:"url"`
@@ -33,14 +21,24 @@ type SerpListIDResult struct {
 	MetaData       SerpListIDRequest `json:"metadata"`
 }
 type SerpListIDResponse struct {
-	Version       string           `json:"version"`
-	StatusCode    int              `json:"status_code"`
-	StatusMessage string           `json:"status_message"`
-	Time          string           `json:"time"`
-	Cost          float64          `json:"cost"`
-	TasksCount    bool             `json:"tasks_count"`
-	TasksError    bool             `json:"tasks_error"`
-	Tasks         []SerpListIDTask `json:"tasks"`
+	Version       string  `json:"version"`
+	StatusCode    int     `json:"status_code"`
+	StatusMessage string  `json:"status_message"`
+	Time          string  `json:"time"`
+	Cost          float64 `json:"cost"`
+	TasksCount    bool    `json:"tasks_count"`
+	TasksError    bool    `json:"tasks_error"`
+	Tasks         []struct {
+		ID            string            `json:"id"`
+		StatusCode    int               `json:"status_code"`
+		StatusMessage string            `json:"status_message"`
+		Time          string            `json:"time"`
+		Cost          float64           `json:"cost"`
+		ResultCount   int64             `json:"result_count"`
+		Path          []string          `json:"path"`
+		Data          SerpListIDRequest `json:"data"`
+		Result        SerpListIDRequest
+	} `json:"tasks"`
 }
 
 type GoogleOrganicRequest struct {
@@ -62,42 +60,40 @@ type GoogleOrganicRequest struct {
 	Tag                 string `json:"tag,omitempty"`
 }
 
-type GoogleOrganicResult struct {
-	Keyword      string `json:"keyword"`
-	Type         string `json:"type"`
-	SEDomain     string `json:"se_domain"`
-	LocationCode int64  `json:"location_code"`
-	LanguageCode string `json:"language_code"`
-	CheckURL     string `json:"check_url"`
-	Datetime     string `json:"datetime"`
-	Spell        struct {
-		Keyword string `json:"keyword"`
-		Type    string `json:"type"`
-	} `json:"spell"`
-	ItemTypes      []string `json:"item_types"`
-	SEResultsCount int64    `json:"se_results_count"`
-	ItemsCount     int64    `json:"items_count"`
-	Items          []struct {
-		Type         string `json:"type"`
-		RankGroup    int64  `json:"rank_group"`
-		RankAbsolute int64  `json:"rank_absolute"`
-		Domain       string `json:"domain"`
-		Title        string `json:"title"`
-		Description  string `json:"description"`
-		URL          string `json:"url"`
-		Breadcrumb   string `json:"breadcrumb"`
-	}
-}
-type GoogleOrganicResponseTasks struct {
-	*BaseReponseTaskList
-	Result []GoogleOrganicResult `json:"result"`
-}
 type GoogleOrganicResponse struct {
 	*BaseResponse
-	Tasks []GoogleOrganicResponseTasks `json:"tasks"`
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			Keyword      string `json:"keyword"`
+			Type         string `json:"type"`
+			SEDomain     string `json:"se_domain"`
+			LocationCode int64  `json:"location_code"`
+			LanguageCode string `json:"language_code"`
+			CheckURL     string `json:"check_url"`
+			Datetime     string `json:"datetime"`
+			Spell        struct {
+				Keyword string `json:"keyword"`
+				Type    string `json:"type"`
+			} `json:"spell"`
+			ItemTypes      []string `json:"item_types"`
+			SEResultsCount int64    `json:"se_results_count"`
+			ItemsCount     int64    `json:"items_count"`
+			Items          []struct {
+				Type         string `json:"type"`
+				RankGroup    int64  `json:"rank_group"`
+				RankAbsolute int64  `json:"rank_absolute"`
+				Domain       string `json:"domain"`
+				Title        string `json:"title"`
+				Description  string `json:"description"`
+				URL          string `json:"url"`
+				Breadcrumb   string `json:"breadcrumb"`
+			}
+		} `json:"result"`
+	} `json:"tasks"`
 }
 
-type SerpService service
+type SerpService Service
 
 func (s *SerpService) GoogleOrganicRegular(ctx context.Context, data GoogleOrganicRequest) (*GoogleOrganicResponse, error) {
 	req, err := s.client.NewRequest("POST", "serp/google/organic/live/regular", []interface{}{data})
