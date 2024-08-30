@@ -21,6 +21,11 @@ var (
 	GoogleLabsCompetitorsDomainPath             = "dataforseo_labs/google/competitors_domain/live"
 	GoogleLabsDomainIntersectionPath            = "dataforseo_labs/google/domain_intersection/live"
 	GoogleLabsSubdomainsPath                    = "dataforseo_labs/google/subdomains/live"
+	GoogleLabsRelevantPagesPath                 = "dataforseo_labs/google/relevant_pages/live"
+	GoogleLabsDomainRankPath                    = "dataforseo_labs/google/domain_rank_overview/live"
+	GoogleLabsPageIntersectionPath              = "dataforseo_labs/google/page_intersection/live"
+	GoogleLabsBulkTrafficEstimationPath         = "dataforseo_labs/google/bulk_traffic_estimation/live"
+	GoogleLabsHistoricalBulkTrafficPath         = "dataforseo_labs/google/historical_bulk_traffic_estimation/live"
 )
 
 type GoogleLabsKeywordForSiteRequest struct {
@@ -752,6 +757,317 @@ func (s *GoogleLabsService) Subdomains(ctx context.Context, data *GoogleLabsSubd
 		return nil, err
 	}
 	res := &GoogleLabsSubdomainsResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsRelevantPagesRequest struct {
+	Target                 string   `json:"target"`
+	LocationName           string   `json:"location_name,omitempty"`
+	LocationCode           int64    `json:"location_code,omitempty"`
+	LanguageName           string   `json:"language_name,omitempty"`
+	LanguageCode           string   `json:"language_code,omitempty"`
+	ItemTypes              []string `json:"item_types,omitempty"`
+	Limit                  int64    `json:"limit,omitempty"`
+	IncludeClickStreamData bool     `json:"include_clickstream_data,omitempty"`
+	Offset                 int64    `json:"offset,omitempty"`
+	HistoricalSERPMode     bool     `json:"historical_serp_mode,omitempty"`
+	Filters                []string `json:"filters,omitempty"`
+	OrderBy                []string `json:"order_by,omitempty"`
+	Tag                    string   `json:"tag,omitempty"`
+}
+
+type GoogleLabsRelevantPagesResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string `json:"se_type"`
+			Target       string `json:"target"`
+			LocationCode int64  `json:"location_code"`
+			LanguageCode string `json:"language_code"`
+			TotalCount   int64  `json:"total_count"`
+			ItemsCount   int64  `json:"items_count"`
+			Items        []struct {
+				SEType      string `json:"se_type"`
+				PageAddress string `json:"page_address"`
+				Metrics     struct {
+					Organic         ItemMetric `json:"organic"`
+					Paid            ItemMetric `json:"paid"`
+					FeaturedSnippet ItemMetric `json:"featured_snippet"`
+					LocalPack       ItemMetric `json:"local_pack"`
+				} `json:"metrics"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+func (s *GoogleLabsService) RelevantPages(ctx context.Context, data *GoogleLabsRelevantPagesRequest) (*GoogleLabsRelevantPagesResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsRelevantPagesPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsRelevantPagesResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsDomainRankRequest struct {
+	Target         string `json:"target"`
+	LocationName   string `json:"location_name,omitempty"`
+	LocationCode   int64  `json:"location_code,omitempty"`
+	LanguageName   string `json:"language_name,omitempty"`
+	LanguageCode   string `json:"language_code,omitempty"`
+	IgnoreSynonyms string `json:"ignore_synonyms,omitempty"`
+	Limit          int64  `json:"limit,omitempty"`
+	Offset         int64  `json:"offset,omitempty"`
+	Tag            string `json:"tag,omitempty"`
+}
+
+type GoogleLabsDomainRankResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string `json:"se_type"`
+			Target       string `json:"target"`
+			LocationCode int64  `json:"location_code"`
+			LanguageCode string `json:"language_code"`
+			TotalCount   int64  `json:"total_count"`
+			ItemsCount   int64  `json:"items_count"`
+			Items        []struct {
+				SEType       string `json:"se_type"`
+				LocationCode int64  `json:"location_code"`
+				LanguageCode string `json:"language_code"`
+				Metrics      struct {
+					Organic ItemMetric `json:"organic"`
+					Paid    ItemMetric `json:"paid"`
+				} `json:"metrics"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+func (s *GoogleLabsService) DomainRank(ctx context.Context, data *GoogleLabsDomainRankRequest) (*GoogleLabsDomainRankResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsDomainRankPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsDomainRankResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsPageIntersectionRequest struct {
+	Pages                  map[string]string `json:"pages"`
+	ExcludePages           []string          `json:"exclude_pages"`
+	LocationName           string            `json:"location_name,omitempty"`
+	LocationCode           int64             `json:"location_code,omitempty"`
+	LanguageName           string            `json:"language_name,omitempty"`
+	LanguageCode           string            `json:"language_code,omitempty"`
+	ItemTypes              []string          `json:"item_types,omitempty"`
+	Limit                  int64             `json:"limit,omitempty"`
+	Offset                 int64             `json:"offset,omitempty"`
+	IncludeSubdomains      bool              `json:"include_subdomains,omitempty"`
+	IntersectionMode       string            `json:"intersection_mode,omitempty"`
+	IncludeSERPInfo        bool              `json:"include_serp_info,omitempty"`
+	IncludeClickStreamData bool              `json:"include_clickstream_data,omitempty"`
+	IgnoreSynonyms         string            `json:"ignore_synonyms,omitempty"`
+	Filters                []string          `json:"filters,omitempty"`
+	OrderBy                []string          `json:"order_by,omitempty"`
+	Tag                    string            `json:"tag,omitempty"`
+}
+
+type GoogleLabsPageIntersectionResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string            `json:"se_type"`
+			Pages        map[string]string `json:"pages"`
+			ExcludePages []string          `json:"exclude_pages"`
+			LocationCode int64             `json:"location_code"`
+			LanguageCode string            `json:"language_code"`
+			TotalCount   int64             `json:"total_count"`
+			ItemsCount   int64             `json:"items_count"`
+			Items        []struct {
+				SEType       string `json:"se_type"`
+				LocationCode int64  `json:"location_code"`
+				LanguageCode string `json:"language_code"`
+				KeywordData  struct {
+					SEType            string            `json:"se_type"`
+					Keyword           string            `json:"keyword"`
+					LocationCode      int64             `json:"location_code"`
+					LanguageCode      string            `json:"language_code"`
+					KeywordInfo       KeywordInfo       `json:"keyword_info"`
+					KeywordProperties KeywordProperties `json:"keyword_properties"`
+					SERPInfo          SERPInfo          `json:"serp_info"`
+					AvgBacklinkInfo   AvgBacklinkInfo   `json:"avg_backlinks_info"`
+					SearchIntentInfo  SearchIntentInfo  `json:"search_intent_info"`
+				} `json:"keyword_data"`
+				IntersectionResult map[string]interface{} `json:"intersection_result"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+func (s *GoogleLabsService) PageIntersection(ctx context.Context, data *GoogleLabsPageIntersectionRequest) (*GoogleLabsPageIntersectionResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsPageIntersectionPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsPageIntersectionResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsBulkTrafficEstimationRequest struct {
+	Targets      []string `json:"targets"`
+	LocationName string   `json:"location_name,omitempty"`
+	LocationCode int64    `json:"location_code,omitempty"`
+	LanguageName string   `json:"language_name,omitempty"`
+	LanguageCode string   `json:"language_code,omitempty"`
+	ItemTypes    []string `json:"item_types,omitempty"`
+	Tag          string   `json:"tag,omitempty"`
+}
+
+type GoogleLabsBulkTrafficEstimationResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string `json:"se_type"`
+			LocationCode int64  `json:"location_code"`
+			LanguageCode string `json:"language_code"`
+			TotalCount   int64  `json:"total_count"`
+			ItemsCount   int64  `json:"items_count"`
+			Items        []struct {
+				SEType  string `json:"se_type"`
+				Target  string `json:"target"`
+				Metrics struct {
+					Organic struct {
+						ETV   float64 `json:"etv"`
+						Count int64   `json:"count"`
+					} `json:"organic"`
+					Paid struct {
+						ETV   float64 `json:"etv"`
+						Count int64   `json:"count"`
+					} `json:"paid"`
+					FeaturedSnippet struct {
+						ETV   float64 `json:"etv"`
+						Count int64   `json:"count"`
+					} `json:"featured_snippet"`
+					LocalPack struct {
+						ETV   float64 `json:"etv"`
+						Count int64   `json:"count"`
+					} `json:"local_pack"`
+				} `json:"metrics"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+func (s *GoogleLabsService) BulkTrafficEstimation(ctx context.Context, data *GoogleLabsBulkTrafficEstimationRequest) (*GoogleLabsBulkTrafficEstimationResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsBulkTrafficEstimationPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsBulkTrafficEstimationResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsHistoricalBulkTrafficRequest struct {
+	Targets      []string `json:"targets"`
+	LocationName string   `json:"location_name,omitempty"`
+	LocationCode int64    `json:"location_code,omitempty"`
+	LanguageName string   `json:"language_name,omitempty"`
+	LanguageCode string   `json:"language_code,omitempty"`
+	ItemTypes    []string `json:"item_types,omitempty"`
+	Tag          string   `json:"tag,omitempty"`
+}
+
+type GoogleLabsHistoricalBulkTrafficResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string `json:"se_type"`
+			LocationCode int64  `json:"location_code"`
+			LanguageCode string `json:"language_code"`
+			TotalCount   int64  `json:"total_count"`
+			ItemsCount   int64  `json:"items_count"`
+			Items        []struct {
+				SEType  string `json:"se_type"`
+				Target  string `json:"target"`
+				Metrics struct {
+					Organic []struct {
+						Year  int     `json:"year"`
+						Month int     `json:"month"`
+						ETV   float64 `json:"etv"`
+						Count int64   `json:"count"`
+					} `json:"organic"`
+					Paid []struct {
+						Year  int     `json:"year"`
+						Month int     `json:"month"`
+						ETV   float64 `json:"etv"`
+						Count int64   `json:"count"`
+					} `json:"paid"`
+					FeaturedSnippet []struct {
+						Year  int     `json:"year"`
+						Month int     `json:"month"`
+						ETV   float64 `json:"etv"`
+						Count int64   `json:"count"`
+					} `json:"featured_snippet"`
+					LocalPack []struct {
+						Year  int     `json:"year"`
+						Month int     `json:"month"`
+						ETV   float64 `json:"etv"`
+						Count int64   `json:"count"`
+					} `json:"local_pack"`
+				} `json:"metrics"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+// HistoricalBulkTrafficEstimation endpoint will provide you with historical monthly traffic volumes for up to 1,000 domains collected within the specified time range through October 2020. If you do not specify the range, data will be returned for the previous 12 months. Along with organic search traffic estimations, you will also get separate values for paid search, featured snippet, and local pack results.
+func (s *GoogleLabsService) HistoricalBulkTrafficEstimation(ctx context.Context, data *GoogleLabsHistoricalBulkTrafficRequest) (*GoogleLabsHistoricalBulkTrafficResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsHistoricalBulkTrafficPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsHistoricalBulkTrafficResponse{}
 	_, err = s.client.Do(ctx, req, res)
 	if err != nil {
 		return nil, err
