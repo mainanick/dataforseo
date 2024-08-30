@@ -74,3 +74,43 @@ type SearchIntentInfo struct {
 	ForeignIntent   []string `json:"foreign_intent"`
 	LastUpdatedTime string   `json:"last_updated_time"`
 }
+
+type KeywordIntent struct {
+	Label       string  `json:"label"`
+	Probability float64 `json:"probability"`
+}
+
+type ItemMetric struct {
+	Pos_1                         int64   `json:"pos_1"`
+	Pos_2_3                       int64   `json:"pos_2_3"`
+	Pos_4_10                      int64   `json:"pos_4_10"`
+	Pos_11_20                     int64   `json:"pos_11_20"`
+	Pos_21_30                     int64   `json:"pos_21_30"`
+	Pos_31_40                     int64   `json:"pos_31_40"`
+	Pos_41_50                     int64   `json:"pos_41_50"`
+	Pos_51_60                     int64   `json:"pos_51_60"`
+	Pos_61_70                     int64   `json:"pos_61_70"`
+	Pos_71_80                     int64   `json:"pos_71_80"`
+	Pos_81_90                     int64   `json:"pos_81_90"`
+	Pos_91_100                    int64   `json:"pos_91_100"`
+	ETV                           float64 `json:"etv"`
+	ImpressionsETV                float64 `json:"impressions_etv"`
+	Count                         int64   `json:"count"`
+	EstimatedPaidTrafficCost      float64 `json:"estimated_paid_traffic_cost"`
+	IsNew                         int64   `json:"is_new"`
+	IsUp                          int64   `json:"is_up"`
+	IsDown                        int64   `json:"is_down"`
+	IsLost                        int64   `json:"is_lost"`
+	ClickstreamETV                int64   `json:"clickstream_etv"`
+	ClickstreamGenderDistribution struct {
+		Female int64 `json:"female"`
+		Male   int64 `json:"male"`
+	} `json:"clickstream_gender_distribution"`
+	ClickstreamAgeDistribution struct {
+		Age_18_24 int64 `json:"18-24"`
+		Age_25_34 int64 `json:"25-34"`
+		Age_35_44 int64 `json:"35-44"`
+		Age_45_54 int64 `json:"45-54"`
+		Age_55_64 int64 `json:"55-64"`
+	} `json:"clickstream_age_distribution"`
+}

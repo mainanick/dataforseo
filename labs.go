@@ -14,6 +14,13 @@ var (
 	GoogleLabsKeywordSuggestionsPath            = "dataforseo_labs/google/keyword_suggestions/live"
 	GoogleLabsKeywordIdeasPath                  = "dataforseo_labs/google/keyword_ideas/live"
 	GoogleLabsKeywordHistoricalSearchVolumePath = "dataforseo_labs/google/historical_search_volume/live"
+	GoogleLabsBulkKeywordDifficultyPath         = "dataforseo_labs/google/bulk_keyword_difficulty/live"
+	GoogleLabsSearchIntentPath                  = "dataforseo_labs/google/search_intent/live"
+	GoogleLabsRankedKeywordsPath                = "dataforseo_labs/google/ranked_keywords/live"
+	GoogleLabsSERPCompetitorsPath               = "dataforseo_labs/google/serp_competitors/live"
+	GoogleLabsCompetitorsDomainPath             = "dataforseo_labs/google/competitors_domain/live"
+	GoogleLabsDomainIntersectionPath            = "dataforseo_labs/google/domain_intersection/live"
+	GoogleLabsSubdomainsPath                    = "dataforseo_labs/google/subdomains/live"
 )
 
 type GoogleLabsKeywordForSiteRequest struct {
@@ -48,59 +55,15 @@ type GoogleLabsKeywordForSiteResponse struct {
 			Offset       int64  `json:"offset"`
 			OffsetToken  string `json:"offset_token"`
 			Items        []struct {
-				SEType       string `json:"se_type"`
-				Keyword      string `json:"keyword"`
-				LocationCode int64  `json:"location_code"`
-				LanguageCode string `json:"language_code"`
-				KeywordInfo  struct {
-					SEType           string  `json:"se_type"`
-					LastUpdatedTime  string  `json:"last_updated_time"`
-					Competition      float64 `json:"competition"`
-					CompetitionLevel string  `json:"competition_level"`
-					CPC              float64 `json:"cpc"`
-					SearchVolume     int64   `json:"search_volume"`
-					LowTopOfPageBid  float64 `json:"low_top_of_page_bid"`
-					HighTopOfPageBid float64 `json:"high_top_of_page_bid"`
-					Categories       []int64 `json:"categories"`
-					MonthlySearches  []struct {
-						Year         int64 `json:"year"`
-						Month        int64 `json:"month"`
-						SearchVolume int64 `json:"search_volume"`
-					} `json:"monthly_searches"`
-				} `json:"keyword_info"`
-				KeywordProperties struct {
-					SEType                     string `json:"se_type"`
-					CoreKeyword                string `json:"core_keyword"`
-					SynonymClusteringAlgorithm string `json:"synonym_clustering_algorithm"`
-					KeywordDifficulty          int64  `json:"keyword_difficulty"`
-					DetectedLanguage           string `json:"detected_language"`
-					IsAnotherLanguage          bool   `json:"is_another_language"`
-				} `json:"keyword_properties"`
-				SERPInfo struct {
-					SEType              string   `json:"se_type"`
-					CheckURL            string   `json:"check_url"`
-					SERPItemTypes       []string `json:"serp_item_types"`
-					SEResultsCount      int64    `json:"se_results_count"`
-					LastUpdatedTime     string   `json:"last_updated_time"`
-					PreviousUpdatedTime string   `json:"previous_updated_time"`
-				} `json:"serp_info"`
-				AvgBacklinkInfo struct {
-					SEType               string  `json:"se_type"`
-					Backlinks            float64 `json:"backlinks"`
-					Dofollow             float64 `json:"dofollow"`
-					ReferringPages       float64 `json:"referring_pages"`
-					ReferringDomains     float64 `json:"referring_domains"`
-					ReferringMainDomains float64 `json:"referring_main_domains"`
-					Rank                 float64 `json:"rank"`
-					MainDomainRank       float64 `json:"main_domain_rank"`
-					LastUpdatedTime      string  `json:"last_updated_time"`
-				} `json:"avg_backlinks_info"`
-				SearchIntentInfo struct {
-					SEType          string   `json:"se_type"`
-					MainIntent      string   `json:"main_intent"`
-					ForeignIntent   []string `json:"foreign_intent"`
-					LastUpdatedTime string   `json:"last_updated_time"`
-				} `json:"search_intent_info"`
+				SEType            string            `json:"se_type"`
+				Keyword           string            `json:"keyword"`
+				LocationCode      int64             `json:"location_code"`
+				LanguageCode      string            `json:"language_code"`
+				KeywordInfo       KeywordInfo       `json:"keyword_info"`
+				KeywordProperties KeywordProperties `json:"keyword_properties"`
+				SERPInfo          SERPInfo          `json:"serp_info"`
+				AvgBacklinkInfo   AvgBacklinkInfo   `json:"avg_backlinks_info"`
+				SearchIntentInfo  SearchIntentInfo  `json:"search_intent_info"`
 			} `json:"items"`
 		} `json:"result"`
 	} `json:"tasks"`
@@ -155,58 +118,14 @@ type GoogleLabsRelatedKeywordsResponse struct {
 			Items        []struct {
 				SEType      string `json:"se_type"`
 				KeywordData struct {
-					Keyword      string `json:"keyword"`
-					LocationCode int64  `json:"location_code"`
-					LanguageCode string `json:"language_code"`
-					KeywordInfo  struct {
-						SEType           string  `json:"se_type"`
-						LastUpdatedTime  string  `json:"last_updated_time"`
-						Competition      float64 `json:"competition"`
-						CompetitionLevel string  `json:"competition_level"`
-						CPC              float64 `json:"cpc"`
-						SearchVolume     int64   `json:"search_volume"`
-						LowTopOfPageBid  float64 `json:"low_top_of_page_bid"`
-						HighTopOfPageBid float64 `json:"high_top_of_page_bid"`
-						Categories       []int64 `json:"categories"`
-						MonthlySearches  []struct {
-							Year         int64 `json:"year"`
-							Month        int64 `json:"month"`
-							SearchVolume int64 `json:"search_volume"`
-						} `json:"monthly_searches"`
-					} `json:"keyword_info"`
-					KeywordProperties struct {
-						SEType                     string `json:"se_type"`
-						CoreKeyword                string `json:"core_keyword"`
-						SynonymClusteringAlgorithm string `json:"synonym_clustering_algorithm"`
-						KeywordDifficulty          int64  `json:"keyword_difficulty"`
-						DetectedLanguage           string `json:"detected_language"`
-						IsAnotherLanguage          bool   `json:"is_another_language"`
-					} `json:"keyword_properties"`
-					SERPInfo struct {
-						SEType              string   `json:"se_type"`
-						CheckURL            string   `json:"check_url"`
-						SERPItemTypes       []string `json:"serp_item_types"`
-						SEResultsCount      int64    `json:"se_results_count"`
-						LastUpdatedTime     string   `json:"last_updated_time"`
-						PreviousUpdatedTime string   `json:"previous_updated_time"`
-					} `json:"serp_info"`
-					AvgBacklinkInfo struct {
-						SEType               string  `json:"se_type"`
-						Backlinks            float64 `json:"backlinks"`
-						Dofollow             float64 `json:"dofollow"`
-						ReferringPages       float64 `json:"referring_pages"`
-						ReferringDomains     float64 `json:"referring_domains"`
-						ReferringMainDomains float64 `json:"referring_main_domains"`
-						Rank                 float64 `json:"rank"`
-						MainDomainRank       float64 `json:"main_domain_rank"`
-						LastUpdatedTime      string  `json:"last_updated_time"`
-					} `json:"avg_backlinks_info"`
-					SearchIntentInfo struct {
-						SEType          string   `json:"se_type"`
-						MainIntent      string   `json:"main_intent"`
-						ForeignIntent   []string `json:"foreign_intent"`
-						LastUpdatedTime string   `json:"last_updated_time"`
-					} `json:"search_intent_info"`
+					Keyword           string            `json:"keyword"`
+					LocationCode      int64             `json:"location_code"`
+					LanguageCode      string            `json:"language_code"`
+					KeywordInfo       KeywordInfo       `json:"keyword_info"`
+					KeywordProperties KeywordProperties `json:"keyword_properties"`
+					SERPInfo          SERPInfo          `json:"serp_info"`
+					AvgBacklinkInfo   AvgBacklinkInfo   `json:"avg_backlinks_info"`
+					SearchIntentInfo  SearchIntentInfo  `json:"search_intent_info"`
 				} `json:"keyword_data"`
 				Depth           int64    `json:"depth"`
 				RelatedKeywords []string `json:"related_keywords"`
@@ -416,6 +335,423 @@ func (s *GoogleLabsService) HistoricalSearchVolume(ctx context.Context, data *Go
 		return nil, err
 	}
 	res := &GoogleLabsHistoricalSearchVolumeResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsBulkKeywordDifficultyRequest struct {
+	Keywords     []string `json:"keywords"`
+	LocationName string   `json:"location_name,omitempty"`
+	LocationCode int64    `json:"location_code,omitempty"`
+	LanguageName string   `json:"language_name,omitempty"`
+	LanguageCode string   `json:"language_code,omitempty"`
+	Tag          string   `json:"tag,omitempty"`
+}
+
+type GoogleLabsBulkKeywordDifficultyResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string `json:"se_type"`
+			LocationCode int64  `json:"location_code"`
+			LanguageCode string `json:"language_code"`
+			TotalCount   int64  `json:"total_count"`
+			ItemsCount   int64  `json:"items_count"`
+			Items        []struct {
+				SEType            string `json:"se_type"`
+				Keyword           string `json:"keyword"`
+				KeywordDifficulty int64  `json:"keyword_difficulty"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+func (s *GoogleLabsService) BulkKeywordDifficulty(ctx context.Context, data *GoogleLabsBulkKeywordDifficultyRequest) (*GoogleLabsBulkKeywordDifficultyResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsBulkKeywordDifficultyPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsBulkKeywordDifficultyResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsSearchIntentRequest struct {
+	Keywords     []string `json:"keywords"`
+	LanguageName string   `json:"language_name,omitempty"`
+	LanguageCode string   `json:"language_code,omitempty"`
+	Tag          string   `json:"tag,omitempty"`
+}
+
+type GoogleLabsSearchIntentResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			LanguageCode string `json:"language_code"`
+			ItemsCount   int64  `json:"items_count"`
+			Items        []struct {
+				Keyword                string          `json:"keyword"`
+				KeywordIntent          KeywordIntent   `json:"keyword_intent"`
+				SecondaryKeywordIntent []KeywordIntent `json:"secondary_keyword_intents"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+func (s *GoogleLabsService) SearchIntent(ctx context.Context, data *GoogleLabsSearchIntentRequest) (*GoogleLabsSearchIntentResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsSearchIntentPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsSearchIntentResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsRankedKeywordsRequest struct {
+	Target                 string   `json:"target"`
+	LocationName           string   `json:"location_name,omitempty"`
+	LocationCode           int64    `json:"location_code,omitempty"`
+	LanguageName           string   `json:"language_name,omitempty"`
+	LanguageCode           string   `json:"language_code,omitempty"`
+	IgnoreSynonyms         string   `json:"ignore_synonyms,omitempty"`
+	ItemTypes              []string `json:"item_types,omitempty"`
+	IncludeClickStreamData bool     `json:"include_clickstream_data,omitempty"`
+	Limit                  int64    `json:"limit,omitempty"`
+	Offset                 int64    `json:"offset,omitempty"`
+	LoadRankAbsolute       bool     `json:"load_rank_absolute,omitempty"`
+	HistoricalSERPMode     bool     `json:"historical_serp_mode,omitempty"`
+	Filters                []string `json:"filters,omitempty"`
+	OrderBy                []string `json:"order_by,omitempty"`
+	Tag                    string   `json:"tag,omitempty"`
+}
+
+// TODO: Incomplete Response Data
+type GoogleLabsRankedKeywordsResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string `json:"se_type"`
+			Target       string `json:"target"`
+			LocationCode int64  `json:"location_code"`
+			LanguageCode string `json:"language_code"`
+			TotalCount   int64  `json:"total_count"`
+			ItemsCount   int64  `json:"items_count"`
+			Metrics      struct {
+				Organic         ItemMetric `json:"organic"`
+				Paid            ItemMetric `json:"paid"`
+				FeaturedSnippet ItemMetric `json:"featured_snippet"`
+				LocalPack       ItemMetric `json:"local_pack"`
+			} `json:"metrics"`
+			MetricsAbsolute struct {
+				Organic         ItemMetric `json:"organic"`
+				Paid            ItemMetric `json:"paid"`
+				FeaturedSnippet ItemMetric `json:"featured_snippet"`
+				LocalPack       ItemMetric `json:"local_pack"`
+			} `json:"metrics_absolute"`
+			Items []struct {
+				SEType      string `json:"se_type"`
+				KeywordData struct {
+					SEType            string            `json:"se_type"`
+					Keyword           string            `json:"keyword"`
+					LocationCode      int64             `json:"location_code"`
+					LanguageCode      string            `json:"language_code"`
+					KeywordInfo       KeywordInfo       `json:"keyword_info"`
+					KeywordProperties KeywordProperties `json:"keyword_properties"`
+					SERPInfo          SERPInfo          `json:"serp_info"`
+					AvgBacklinkInfo   AvgBacklinkInfo   `json:"avg_backlinks_info"`
+					SearchIntentInfo  SearchIntentInfo  `json:"search_intent_info"`
+				} `json:"keyword_data"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+// RankeKeywords endpoint will provide you with the list of keywords that any domain or webpage is ranking for. You will also get SERP elements related to the keyword position, as well as impressions, monthly searches and other data relevant to the returned keywords.
+func (s *GoogleLabsService) RankedKeywords(ctx context.Context, data *GoogleLabsRankedKeywordsRequest) (*GoogleLabsRankedKeywordsResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsRankedKeywordsPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsRankedKeywordsResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsSERPCompetitorsRequest struct {
+	Keywords          []string `json:"keywords"`
+	LocationName      string   `json:"location_name,omitempty"`
+	LocationCode      int64    `json:"location_code,omitempty"`
+	LanguageName      string   `json:"language_name,omitempty"`
+	LanguageCode      string   `json:"language_code,omitempty"`
+	IncludeSubdomains bool     `json:"include_subdomains,omitempty"`
+	ItemTypes         []string `json:"item_types,omitempty"`
+	Limit             int64    `json:"limit,omitempty"`
+	Offset            int64    `json:"offset,omitempty"`
+	Filters           []string `json:"filters,omitempty"`
+	OrderBy           []string `json:"order_by,omitempty"`
+	Tag               string   `json:"tag,omitempty"`
+}
+
+type GoogleLabsSERPCompetitorsResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string   `json:"se_type"`
+			SeedKeywords []string `json:"seed_keywords"`
+			LocationCode int64    `json:"location_code"`
+			LanguageCode string   `json:"language_code"`
+			TotalCount   int64    `json:"total_count"`
+			ItemsCount   int64    `json:"items_count"`
+			Items        []struct {
+				SEType            string                 `json:"se_type"`
+				Domain            string                 `json:"domain"`
+				AvgPosition       int64                  `json:"avg_position"`
+				MedianPosition    int64                  `json:"median_position"`
+				Rating            int64                  `json:"rating"`
+				ETV               float64                `json:"etv"`
+				KeywordsCount     int64                  `json:"keywords_count"`
+				Visibility        float64                `json:"visibility"`
+				RelevantSERPItems int64                  `json:"relevant_serp_items"`
+				KeywordsPositions map[string]interface{} `json:"keywords_positions"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+// SERPCompetitors endpoint will provide you with a list of domains ranking for the keywords you specify. You will also get SERP rankings, rating, estimated traffic volume, and visibility values the provided domains gain from the specified keywords.
+func (s *GoogleLabsService) SERPCompetitors(ctx context.Context, data *GoogleLabsSERPCompetitorsRequest) (*GoogleLabsSERPCompetitorsResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsSERPCompetitorsPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsSERPCompetitorsResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsCompetitorsDomainRequest struct {
+	Target                 string   `json:"target"`
+	LocationName           string   `json:"location_name,omitempty"`
+	LocationCode           int64    `json:"location_code,omitempty"`
+	LanguageName           string   `json:"language_name,omitempty"`
+	LanguageCode           string   `json:"language_code,omitempty"`
+	ItemTypes              []string `json:"item_types,omitempty"`
+	IncludeClickStreamData bool     `json:"include_clickstream_data,omitempty"`
+	Filters                []string `json:"filters,omitempty"`
+	OrderBy                []string `json:"order_by,omitempty"`
+	Limit                  int64    `json:"limit,omitempty"`
+	Offset                 int64    `json:"offset,omitempty"`
+	MaxRankGroup           int64    `json:"max_rank_group,omitempty"`
+	ExcludeTopDomains      bool     `json:"exclude_top_domains,omitempty"`
+	IntersectingDomain     []string `json:"intersecting_domains,omitempty"`
+	Tag                    string   `json:"tag,omitempty"`
+}
+
+type GoogleLabsCompetitorsDomainResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string `json:"se_type"`
+			Target       string `json:"target"`
+			LocationCode int64  `json:"location_code"`
+			LanguageCode string `json:"language_code"`
+			TotalCount   int64  `json:"total_count"`
+			ItemsCount   int64  `json:"items_count"`
+			Items        []struct {
+				SEType            string  `json:"se_type"`
+				Domain            string  `json:"domain"`
+				AvgPosition       float64 `json:"avg_position"`
+				SumPosition       int64   `json:"sum_position"`
+				Intersections     int64   `json:"intersections"`
+				FullDomainMetrics struct {
+					Organic         ItemMetric `json:"organic"`
+					Paid            ItemMetric `json:"paid"`
+					FeaturedSnippet ItemMetric `json:"featured_snippet"`
+					LocalPack       ItemMetric `json:"local_pack"`
+				} `json:"full_domain_metrics"`
+				Metrics struct {
+					Organic         ItemMetric `json:"organic"`
+					Paid            ItemMetric `json:"paid"`
+					FeaturedSnippet ItemMetric `json:"featured_snippet"`
+					LocalPack       ItemMetric `json:"local_pack"`
+				} `json:"metrics"`
+				CompetitorMetrics struct {
+					Organic         ItemMetric `json:"organic"`
+					Paid            ItemMetric `json:"paid"`
+					FeaturedSnippet ItemMetric `json:"featured_snippet"`
+					LocalPack       ItemMetric `json:"local_pack"`
+				} `json:"competitor_metrics"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+// CompetitorsDomain endpoint will provide you with a full overview of ranking and traffic data of the competitor domains from organic and paid search. In addition to that, you will get the metrics specific to the keywords both competitor domains and your domain rank for within the same SERP.
+func (s *GoogleLabsService) CompetitorsDomain(ctx context.Context, data *GoogleLabsCompetitorsDomainRequest) (*GoogleLabsCompetitorsDomainResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsCompetitorsDomainPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsCompetitorsDomainResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsDomainIntersectionRequest struct {
+	Target1                string   `json:"target1"`
+	Target2                string   `json:"target2"`
+	LocationName           string   `json:"location_name,omitempty"`
+	LocationCode           int64    `json:"location_code,omitempty"`
+	LanguageName           string   `json:"language_name,omitempty"`
+	LanguageCode           string   `json:"language_code,omitempty"`
+	Intersections          bool     `json:"intersections,omitempty"`
+	ItemTypes              []string `json:"item_types,omitempty"`
+	IncludeSERPInfo        bool     `json:"include_serp_info,omitempty"`
+	IncludeClickStreamData bool     `json:"include_clickstream_data,omitempty"`
+	Limit                  int64    `json:"limit,omitempty"`
+	Offset                 int64    `json:"offset,omitempty"`
+	Filters                []string `json:"filters,omitempty"`
+	OrderBy                []string `json:"order_by,omitempty"`
+	Tag                    string   `json:"tag,omitempty"`
+}
+
+type GoogleLabsDomainIntersectionResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string `json:"se_type"`
+			Target1      string `json:"target1"`
+			Target2      string `json:"target2"`
+			LocationCode int64  `json:"location_code"`
+			LanguageCode string `json:"language_code"`
+			TotalCount   int64  `json:"total_count"`
+			ItemsCount   int64  `json:"items_count"`
+			Items        []struct {
+				SEType      string `json:"se_type"`
+				KeywordData struct {
+					SEType            string            `json:"se_type"`
+					Keyword           string            `json:"keyword"`
+					LocationCode      int64             `json:"location_code"`
+					LanguageCode      string            `json:"language_code"`
+					KeywordInfo       KeywordInfo       `json:"keyword_info"`
+					KeywordProperties KeywordProperties `json:"keyword_properties"`
+					SERPInfo          SERPInfo          `json:"serp_info"`
+					AvgBacklinkInfo   AvgBacklinkInfo   `json:"avg_backlinks_info"`
+					SearchIntentInfo  SearchIntentInfo  `json:"search_intent_info"`
+				} `json:"keyword_data"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+// DomainIntersection endpoint will provide you with the keywords for which both specified domains rank within the same SERP. You will get search volume, competition, cost-per-click and impressions data on each intersecting keyword. Along with that, you will get data on the first and second domain’s SERP element discovered for this keyword, as well as the estimated traffic volume and cost of ad traffic. Domain Intersection endpoint supports organic, paid, local pack, and featured snippet results.
+func (s *GoogleLabsService) DomainIntersection(ctx context.Context, data *GoogleLabsDomainIntersectionRequest) (*GoogleLabsDomainIntersectionResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsDomainIntersectionPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsDomainIntersectionResponse{}
+	_, err = s.client.Do(ctx, req, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+type GoogleLabsSubdomainsRequest struct {
+	Target                 string   `json:"target"`
+	LocationName           string   `json:"location_name,omitempty"`
+	LocationCode           int64    `json:"location_code,omitempty"`
+	LanguageName           string   `json:"language_name,omitempty"`
+	LanguageCode           string   `json:"language_code,omitempty"`
+	ItemTypes              []string `json:"item_types,omitempty"`
+	IncludeClickStreamData bool     `json:"include_clickstream_data,omitempty"`
+	HistoricalSERPMode     bool     `json:"historical_serp_mode,omitempty"`
+	Filters                []string `json:"filters,omitempty"`
+	OrderBy                []string `json:"order_by,omitempty"`
+	Limit                  int64    `json:"limit,omitempty"`
+	Offset                 int64    `json:"offset,omitempty"`
+	Tag                    string   `json:"tag,omitempty"`
+}
+
+type GoogleLabsSubdomainsResponse struct {
+	*BaseResponse
+	Tasks []struct {
+		*BaseResponseTaskList
+		Result []struct {
+			SEType       string `json:"se_type"`
+			Target       string `json:"target"`
+			LocationCode int64  `json:"location_code"`
+			LanguageCode string `json:"language_code"`
+			TotalCount   int64  `json:"total_count"`
+			ItemsCount   int64  `json:"items_count"`
+			Items        []struct {
+				SEType    string `json:"se_type"`
+				Subdomain string `json:"subdomain"`
+				Metrics   struct {
+					Organic         ItemMetric `json:"organic"`
+					Paid            ItemMetric `json:"paid"`
+					FeaturedSnippet ItemMetric `json:"featured_snippet"`
+					LocalPack       ItemMetric `json:"local_pack"`
+				} `json:"metrics"`
+			} `json:"items"`
+		} `json:"result"`
+	} `json:"tasks"`
+}
+
+// Subdomains endpoint will provide you with a list of subdomains of the specified domain, along with the ranking distribution across organic and paid search. In addition to that, you will also get the estimated traffic volume of subdomains based on search volume and impressions.
+func (s *GoogleLabsService) Subdomains(ctx context.Context, data *GoogleLabsSubdomainsRequest) (*GoogleLabsSubdomainsResponse, error) {
+	req, err := s.client.NewRequest("POST", GoogleLabsSubdomainsPath, []interface{}{data})
+	if err != nil {
+		if errors.Is(err, os.ErrDeadlineExceeded) {
+			return nil, ErrTimeout
+		}
+		return nil, err
+	}
+	res := &GoogleLabsSubdomainsResponse{}
 	_, err = s.client.Do(ctx, req, res)
 	if err != nil {
 		return nil, err

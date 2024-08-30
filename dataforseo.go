@@ -20,10 +20,10 @@ var (
 )
 
 var (
-	ErrPaymentRequired = errors.New("Payment Required")
-	ErrDataForSEO      = errors.New("DataForSEO Error")
-	ErrUnauthorized    = errors.New("Unauthorized")
-	ErrTimeout         = errors.New("Timeout")
+	ErrPaymentRequired = errors.New("payment required")
+	ErrDataForSEO      = errors.New("dataforseo error")
+	ErrUnauthorized    = errors.New("unauthorized")
+	ErrTimeout         = errors.New("timeout")
 )
 
 type DataForSEOError struct {
@@ -32,7 +32,7 @@ type DataForSEOError struct {
 }
 
 func (d *DataForSEOError) Error() string {
-	return d.Error()
+	return d.Err.Error()
 }
 
 type Service struct {
