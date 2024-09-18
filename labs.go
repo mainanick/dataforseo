@@ -37,7 +37,7 @@ type GoogleLabsKeywordForSiteRequest struct {
 	IncludeSERPInfo        bool     `json:"include_serp_info,omitempty"`
 	IncludeSubdomains      bool     `json:"include_subdomains,omitempty"`
 	IncludeClickStreamData bool     `json:"include_clickstream_data,omitempty"`
-	IgnoreSynonyms         string   `json:"ignore_synonyms,omitempty"`
+	IgnoreSynonyms         bool     `json:"ignore_synonyms,omitempty"`
 	Limit                  int64    `json:"limit,omitempty"`
 	Offset                 int64    `json:"offset,omitempty"`
 	OffsetToken            string   `json:"offset_token,omitempty"`
@@ -100,7 +100,7 @@ type GoogleLabsRelatedKeywordsRequest struct {
 	IncludeSeedKeywordInfo bool     `json:"include_seed_keyword,omitempty"`
 	IncludeSERPInfo        bool     `json:"include_serp_info,omitempty"`
 	IncludeClickStreamData bool     `json:"include_clickstream_data,omitempty"`
-	IgnoreSynonyms         string   `json:"ignore_synonyms,omitempty"`
+	IgnoreSynonyms         bool     `json:"ignore_synonyms,omitempty"`
 	ReplaceWithCoreKeyword bool     `json:"replace_with_core_keyword,omitempty"`
 	Filters                []string `json:"filters,omitempty"`
 	OrderBy                []string `json:"order_by,omitempty"`
@@ -170,7 +170,7 @@ type GoogleLabsKeywordSuggestionsRequest struct {
 	IncludeSERPInfo        bool     `json:"include_serp_info,omitempty"`
 	IncludeClickStreamData bool     `json:"include_clickstream_data,omitempty"`
 	ExactMatch             bool     `json:"exact_match,omitempty"`
-	IgnoreSynonyms         string   `json:"ignore_synonyms,omitempty"`
+	IgnoreSynonyms         bool     `json:"ignore_synonyms,omitempty"`
 	Filters                []string `json:"filters,omitempty"`
 	OrderBy                []string `json:"order_by,omitempty"`
 	Limit                  int64    `json:"limit,omitempty"`
@@ -241,7 +241,7 @@ type GoogleLabsKeywordIdeasRequest struct {
 	LanguageName           string   `json:"language_name,omitempty"`
 	LanguageCode           string   `json:"language_code,omitempty"`
 	CloselyVariants        bool     `json:"closely_variants,omitempty"`
-	IgnoreSynonyms         string   `json:"ignore_synonyms,omitempty"`
+	IgnoreSynonyms         bool     `json:"ignore_synonyms,omitempty"`
 	IncludeSERPInfo        bool     `json:"include_serp_info,omitempty"`
 	IncludeClickStreamData bool     `json:"include_clickstream_data,omitempty"`
 	Limit                  int64    `json:"limit,omitempty"`
@@ -436,7 +436,7 @@ type GoogleLabsRankedKeywordsRequest struct {
 	LocationCode           int64    `json:"location_code,omitempty"`
 	LanguageName           string   `json:"language_name,omitempty"`
 	LanguageCode           string   `json:"language_code,omitempty"`
-	IgnoreSynonyms         string   `json:"ignore_synonyms,omitempty"`
+	IgnoreSynonyms         bool     `json:"ignore_synonyms,omitempty"`
 	ItemTypes              []string `json:"item_types,omitempty"`
 	IncludeClickStreamData bool     `json:"include_clickstream_data,omitempty"`
 	Limit                  int64    `json:"limit,omitempty"`
@@ -827,7 +827,7 @@ type GoogleLabsDomainRankRequest struct {
 	LocationCode   int64  `json:"location_code,omitempty"`
 	LanguageName   string `json:"language_name,omitempty"`
 	LanguageCode   string `json:"language_code,omitempty"`
-	IgnoreSynonyms string `json:"ignore_synonyms,omitempty"`
+	IgnoreSynonyms bool   `json:"ignore_synonyms,omitempty"`
 	Limit          int64  `json:"limit,omitempty"`
 	Offset         int64  `json:"offset,omitempty"`
 	Tag            string `json:"tag,omitempty"`
@@ -887,7 +887,7 @@ type GoogleLabsPageIntersectionRequest struct {
 	IntersectionMode       string            `json:"intersection_mode,omitempty"`
 	IncludeSERPInfo        bool              `json:"include_serp_info,omitempty"`
 	IncludeClickStreamData bool              `json:"include_clickstream_data,omitempty"`
-	IgnoreSynonyms         string            `json:"ignore_synonyms,omitempty"`
+	IgnoreSynonyms         bool              `json:"ignore_synonyms,omitempty"`
 	Filters                []string          `json:"filters,omitempty"`
 	OrderBy                []string          `json:"order_by,omitempty"`
 	Tag                    string            `json:"tag,omitempty"`
